@@ -55,8 +55,9 @@
         <!-- hidden photo input -->
         <input type="file" #photoInput hidden multiple (change)="onFilesSelected($event)">
         <!-- uploaded photos preview -->
-        <div class="row mt-3">
-            <div class="col-md-3" *ngFor="let image of imagePreviews; let i = index">
+        <div class="row mt-3"  *ngIf="blobs.length > 0">
+            <h3>Izabrali ste {{blobs.length}} fotografije/a.</h3>
+            <div class="col-md-3" *ngFor="let image of getPaginatedItems(); let i = index">
                 <div class="card">
                     <!-- remove image button -->
                     <button class="btn btn-danger remove-btn" (click)="removeImage(i)">X</button>
@@ -64,14 +65,42 @@
                     <div class="card-body">
                         <!-- button for quantity -->
                         <div class="input-group mb-3">
-                            <button class="btn btn-outline-secondary" type="button" [id]="'button-minus-' + i" (click)="decrementValue(i)">-</button>
-                            <input type="text" class="form-control text-center" value="1" aria-describedby="button-addon1" [(ngModel)]="values[i]" (change)="changeValue(i, $event)">
-                            <button class="btn btn-outline-secondary" type="button" [id]="'button-plus-' + i" (click)="incrementValue(i)">+</button>
+                            <button class="btn btn-outline-secondary" type="button" [id]="'button-minus-' + i"
+                                (click)="decrementValue(i)">-</button>
+                            <input type="text" class="form-control text-center" value="1"
+                                aria-describedby="button-addon1" [(ngModel)]="values[i]"
+                                (change)="changeValue(i, $event)">
+                            <button class="btn btn-outline-secondary" type="button" [id]="'button-plus-' + i"
+                                (click)="incrementValue(i)">+</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-sm-4" *ngIf="blobs.length > 0"></div>
+            <div class="col-sm-4 justify-content-center d-flex" *ngIf="blobs.length > 0">
+                <div>
+                    <nav aria-label="...">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item pagination-danger-edge" [class.disabled]="currentPage === 1">
+                                <a class="page-link" href="#"
+                                    (click)="onPrevPage(); $event.preventDefault();">Prethodna</a>
+                            </li>
+                            <!-- Generate page numbers -->
+                            <li class="page-item pagination-inverse" *ngFor="let page of [].constructor(totalPages); let pIndex = index"
+                                [class.active]="currentPage === pIndex+1">
+                                <a class="page-link" href="#" (click)="goToPage(pIndex+1); $event.preventDefault();">{{
+                                    pIndex+1 }}</a>
+                            </li>
+                            <li class="page-item pagination-danger-edge" [class.disabled]="currentPage === totalPages">
+                                <a class="page-link" href="#" (click)="onNextPage(); $event.preventDefault();">Sledeća</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-sm-4" *ngIf="blobs.length > 0"></div>
+        
         <!-- choose photo dimensions -->
         <div class="col-sm-4"></div>
         <div class="col-sm-4">

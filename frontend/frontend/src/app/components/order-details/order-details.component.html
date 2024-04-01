@@ -1,5 +1,5 @@
 <div class="flex-container d-flex justify-content-center">
-    <div class="row text-center" style="max-width: 100%;">
+    <div class="row text-center" style="width: 100%;">
         <div class="modal" id="errorModal" #errorModal tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -19,8 +19,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-1"></div>
-        <div class="col-sm-4">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-3">
             <!-- Form Container: Input fields will take up maximum width here -->
             <div class="form-group">
                 <label for="inputName">Ime:</label>
@@ -38,15 +38,18 @@
                 <label for="inputPhone">Telefon:</label>
                 <input type="text" class="form-control" id="inputPhone" placeholder="Unesite telefon" [(ngModel)]="phone">
             </div>
-            <div class="form-group">
-                <label for="">Način preuzimanja:</label><br>
-                <label class="form-check-label" for="licno">Lično preuzimanje &nbsp;</label>
-                <input type="radio" class="form-check-input" name="pickup" id="licno" [(ngModel)]="pickupMethod"
-                    value="licno" checked>
-                <label class="form-check-label" for="kurir"> &nbsp; Kurirska služba &nbsp;</label>
-                <input type="radio" class="form-check-input" name="pickup" id="kurir" [(ngModel)]="pickupMethod"
-                    value="kurir">
+            <label for="">Izaberite način preuzimanja:</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="pickup" id="licno"
+                    value="licno" checked [(ngModel)]="pickupMethod">
+                <label class="form-check-label" for="licno">Lično preuzimanje</label>
             </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="pickup" id="kurir"
+                    value="kurir" [(ngModel)]="pickupMethod">
+                <label class="form-check-label" for="kurir">Kurirska služba</label>
+            </div>
+            
             <div *ngIf="pickupMethod=='kurir'">
                 <br>
                 <p class="red">D Express (Rok isporuke 7 dana, Poštarina 399 RSD). Plaćanje pouzećem.</p>
@@ -72,13 +75,13 @@
                 </select>
             </div>
             <br>
-            <textarea class="form-control" id="" name="" placeholder="Dodajte svoj komentar ovde..." [(ngModel)]="comment"></textarea><br>
+            <textarea class="form-control" id="" name="" placeholder="Dodajte svoj komentar(opciono) ovde..." [(ngModel)]="comment"></textarea><br>
             <button class="btn btn-danger w-100" (click)="finalize()">
                 DALJE
             </button>
         </div>
         <div class="col-sm-1"></div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <!-- Right Spacer -->
             <label for="">Terazije 5, Beograd </label>
             <br>
@@ -91,5 +94,6 @@
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45256.28670148684!2d20.441599450061148!3d44.85175012584885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475a7b9634cbe4a1%3A0x8de870566be4663c!2sFOTO%20STUDIO%20PRIME(art%20digital%20foto)!5e0!3m2!1sen!2srs!4v1678709538567!5m2!1sen!2srs"
                 allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
+        <div class="col-sm-1"></div>
     </div>
 </div>
