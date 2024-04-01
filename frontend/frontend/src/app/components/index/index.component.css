@@ -1,0 +1,25 @@
+.remove-btn {
+    position: absolute;
+    top: -5px;
+    /* Adjust these values as needed */
+    right: -5px;
+    z-index: 100;
+    /* Ensure the button stays above other elements */
+    border-radius: 50%;
+    /* Makes the button round */
+    width: 30px;
+    /* Set a fixed width */
+    height: 30px;
+    /* Set a fixed height, same as width to make it a circle */
+    text-align: center;
+    padding: 0;
+    /* Adjust padding to center the 'X' */
+    line-height: 30px;
+    /* Center the 'X' vertically */
+    justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.card{
+    margin: 20px;
+}
