@@ -28,6 +28,10 @@ export class IndexComponent implements AfterViewInit, OnInit {
   error: String = '';
   showError: boolean = false;
   paperBacking: String = 'mat';
+  // for pagination
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
+  totalPages: number = 0;
 
   // renderer is used for display modal
   constructor(
@@ -37,6 +41,31 @@ export class IndexComponent implements AfterViewInit, OnInit {
   ) {}
   ngOnInit(): void {
     localStorage.removeItem('photos uploaded');
+  }
+
+  setupPagination() {
+    this.totalPages = Math.ceil(this.blobs.length / this.itemsPerPage);
+  }
+  
+  getPaginatedItems() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.imagePreviews.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+  
+  goToPage(page: number) {
+    this.currentPage = page;
+  }
+  
+  onPrevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+  
+  onNextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 
   // display modal on page load
@@ -82,6 +111,7 @@ export class IndexComponent implements AfterViewInit, OnInit {
     this.imagePreviews.splice(index, 1);
     this.blobs.splice(index, 1);
     this.values.splice(index, 1);
+    this.setupPagination();
   }
 
   setImageStyles() {
@@ -120,6 +150,7 @@ export class IndexComponent implements AfterViewInit, OnInit {
       };
       reader.readAsDataURL(blob);
     }
+    this.setupPagination();
 
     // Example: Upload the first blob
     // This is just for demonstration, your upload method may differ

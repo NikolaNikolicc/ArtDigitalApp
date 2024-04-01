@@ -1,0 +1,28 @@
+/* radio button select */
+
+/* Style for the label when the associated radio button is selected */
+.form-check-input:checked + .form-check-label {
+    color: white; /* For text color */
+    background-color: #dc3545; /* Bootstrap 'btn-danger' background color */
+    padding: .375rem .75rem; /* Bootstrap padding for buttons */
+    border-radius: .25rem; /* Bootstrap border-radius for buttons */
+    cursor: pointer; /* Cursor style */
+  }
+  
+  /* Style for the label to make it look more like a button */
+  .form-check-label {
+    display: inline-block;
+    padding: .375rem .75rem; /* Bootstrap padding for buttons */
+    margin-bottom: 0; /* Bootstrap style */
+    vertical-align: top;
+    cursor: pointer;
+    border-radius: .25rem; /* Bootstrap border-radius for buttons */
+    border: 1px solid transparent; /* Transparent border, takes up space for layout */
+  }
+  
+  /* Ensure the input (radio button) is not displayed */
+  .form-check-input {
+    position: absolute;
+    left: -9999px;
+  }
+  

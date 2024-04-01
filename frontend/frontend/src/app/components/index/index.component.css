@@ -1,8 +1,8 @@
 .remove-btn {
     position: absolute;
-    top: -5px;
+    top: -15px;
     /* Adjust these values as needed */
-    right: -5px;
+    right: -15px;
     z-index: 100;
     /* Ensure the button stays above other elements */
     border-radius: 50%;
@@ -22,4 +22,56 @@
 
 .card{
     margin: 20px;
+}
+
+/* pagination */
+
+/* Default style for pagination links */
+.pagination .page-link {
+  color: #dc3545; /* Default text color (e.g., Bootstrap primary color) */
+  background-color: #ffffff; /* Default background color */
+  border-color: #dc3545;
+}
+
+/* Style for active and hovered page links (btn-danger style) */
+.pagination .page-item.active .page-link,
+.pagination .page-link:hover {
+  color: white; /* White text color */
+  background-color: #dc3545; /* Red background color similar to btn-danger */
+  border-color: #dc3545;
+}
+
+/* Additionally, you might want to style the disabled state */
+.pagination .page-item.disabled .page-link {
+  color: #6c757d; /* Grey text color for disabled links */
+  background-color: #ffffff; /* Background color for disabled links */
+  border-color: #6c757d;
+}
+
+/* radio button select */
+
+/* Style for the label when the associated radio button is selected */
+.form-check-input:checked + .form-check-label {
+  color: white; /* For text color */
+  background-color: #dc3545; /* Bootstrap 'btn-danger' background color */
+  padding: .375rem .75rem; /* Bootstrap padding for buttons */
+  border-radius: .25rem; /* Bootstrap border-radius for buttons */
+  cursor: pointer; /* Cursor style */
+}
+
+/* Style for the label to make it look more like a button */
+.form-check-label {
+  display: inline-block;
+  padding: .375rem .75rem; /* Bootstrap padding for buttons */
+  margin-bottom: 0; /* Bootstrap style */
+  vertical-align: top;
+  cursor: pointer;
+  border-radius: .25rem; /* Bootstrap border-radius for buttons */
+  border: 1px solid transparent; /* Transparent border, takes up space for layout */
+}
+
+/* Ensure the input (radio button) is not displayed */
+.form-check-input {
+  position: absolute;
+  left: -9999px;
 }
