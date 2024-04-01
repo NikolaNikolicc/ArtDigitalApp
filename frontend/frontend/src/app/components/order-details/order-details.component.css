@@ -1,0 +1,12 @@
+iframe {
+  border: 1px solid #ccc; /* Change the color #ccc to whatever color you want for the border */
+  /*margin: 0 20px; /* This will add spacing to the left and right of the iframe */
+  width: calc(100% - 30px); /* This accounts for the 15px margin on each side */
+  height: 30vh;
+  box-sizing: border-box;
+}
+
+
+.red{
+color: red;
+}

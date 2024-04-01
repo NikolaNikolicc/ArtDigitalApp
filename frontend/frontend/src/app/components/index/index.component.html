@@ -1,6 +1,6 @@
-<div class="container-fluid overflow-auto d-flex justify-content-center">
-    
-    <div class="row text-center">
+<div class="flex-container d-flex overflow-auto justify-content-center">
+
+    <div class="row text-center" style="width: 100%">
         <!-- This is where the modal would typically be initialized, separate from the main content flow -->
         <div class="modal" id="notificationModal" #notificationModal tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
@@ -8,16 +8,20 @@
                     <div class="modal-header">
                         <h3 class="modal-title">Važno obaveštenje!</h3>
                     </div>
-    
+
                     <div class="modal-body text-start">
                         <ul>
                             <li>Rok za isporuku fotografija je do 7 radnih dana</li>
                             <li>Ukoliko na drugom koraku izaberete "bez akcije", nemate pravo na poklone</li>
-                            <li>Ukoliko na drugom koraku izaberete "želim akciju", na svakih 100 fotografija imate pravo na 5 poklona (ako izaberete 500 fotografija, otvoriće vam se opcija da izaberete 5 seta poklona)</li>
-                        </ul><hr>
-                        Molimo Vas pročitate ovu poruku i uvažite ovo obaveštenje kako bi uštedeli naše vreme i Vaše fotografije dobili u što kraćem roku. Hvala Vam na razumevanju.
+                            <li>Ukoliko na drugom koraku izaberete "želim akciju", na svakih 100 fotografija imate pravo
+                                na 5 poklona (ako izaberete 500 fotografija, otvoriće vam se opcija da izaberete 5 seta
+                                poklona)</li>
+                        </ul>
+                        <hr>
+                        Molimo Vas pročitate ovu poruku i uvažite ovo obaveštenje kako bi uštedeli naše vreme i Vaše
+                        fotografije dobili u što kraćem roku. Hvala Vam na razumevanju.
                     </div>
-    
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Razumem</button>
                     </div>
@@ -30,11 +34,11 @@
                     <div class="modal-header">
                         <h3 class="modal-title">Greška</h3>
                     </div>
-    
+
                     <div class="modal-body text-start">
                         {{this.error}}
                     </div>
-    
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Razumem</button>
                     </div>
@@ -42,10 +46,6 @@
             </div>
         </div>
         <!-- Main content -->
-        <div class="col-sm-12">
-            <h1>Izrada fotografija online</h1>
-        </div>
-        <br><br><br>
         <div class="col-sm-4"></div> <!-- Empty column for spacing -->
         <div class="col-sm-4">
             <button class="btn btn-danger w-100" (click)="photoInput.click()">DODAJ SLIKE</button>
@@ -53,17 +53,29 @@
         <div class="col-sm-4"></div> <!-- Empty column for spacing -->
         <br><br><br>
         <!-- hidden photo input -->
-        <input type="file" #photoInput style="display: none" multiple (change)="onFilesSelected($event)">
+        <input type="file" #photoInput hidden multiple (change)="onFilesSelected($event)">
         <!-- uploaded photos preview -->
         <div class="row mt-3">
-            <div class="col-md-3" *ngFor="let image of blobs">
-              <img [src]="image" class="img-fluid img-thumbnail">
+            <div class="col-md-3" *ngFor="let image of imagePreviews; let i = index">
+                <div class="card">
+                    <!-- remove image button -->
+                    <button class="btn btn-danger remove-btn" (click)="removeImage(i)">X</button>
+                    <img [src]="image" class="card-img-top" [style]="setImageStyles()">
+                    <div class="card-body">
+                        <!-- button for quantity -->
+                        <div class="input-group mb-3">
+                            <button class="btn btn-outline-secondary" type="button" [id]="'button-minus-' + i" (click)="decrementValue(i)">-</button>
+                            <input type="text" class="form-control text-center" value="1" aria-describedby="button-addon1" [(ngModel)]="values[i]" (change)="changeValue(i, $event)">
+                            <button class="btn btn-outline-secondary" type="button" [id]="'button-plus-' + i" (click)="incrementValue(i)">+</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
         <!-- choose photo dimensions -->
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
-            <h3>Klikom na format selektujete sve fotografije u željenoj dimenziji:</h3><br>
+            <h3>Izberite dimenziju fotografija:</h3><br>
             <select class="form-select text-center" name="" id="" [(ngModel)]="photoFormat">
                 <option value="" disabled selected>--IZABERITE ŽELJENI FORMAT--</option>
                 <option value="9x13">9x13</option>
@@ -79,11 +91,13 @@
         <div class="col-12 mt-3">
             <h3>Izaberite tip podloge papira:</h3>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="paperBacking" id="mat" checked>
+                <input class="form-check-input" type="radio" name="paperBacking" id="mat" [(ngModel)]="paperBacking"
+                    value="mat" checked>
                 <label class="form-check-label" for="mat">Mat</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="paperBacking" id="sjaj">
+                <input class="form-check-input" type="radio" name="paperBacking" id="sjaj" [(ngModel)]="paperBacking"
+                    value="sjaj">
                 <label class="form-check-label" for="sjaj">Sjaj</label>
             </div>
         </div>
@@ -95,5 +109,5 @@
         </div>
         <div class="col-sm-4"></div> <!-- Empty column for spacing -->
     </div>
-    
+
 </div>

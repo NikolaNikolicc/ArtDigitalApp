@@ -1,5 +1,4 @@
 <div class="container-fluid overflow-auto d-flex justify-content-center">
-    
     <div class="row text-center">
         <!-- This is where the modal would typically be initialized, separate from the main content flow -->
         <div class="modal" id="errorModal" #errorModal tabindex="-1" aria-hidden="true">
@@ -8,47 +7,82 @@
                     <div class="modal-header">
                         <h3 class="modal-title">Greška</h3>
                     </div>
-    
+
                     <div class="modal-body text-start">
-                        {{this.error}}
+                        {{ this.error }}
                     </div>
-    
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Razumem</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                            Razumem
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Main content -->
-        <div class="col-sm-12">
-            <h1>Izrada fotografija online</h1>
-        </div>
-        <br><br><br>
         <!-- choose paper type -->
         <div class="col-sm-12">
             <h3>Da li želite akciju:</h3>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="extras" id="ne" value="ne" [(ngModel)]="extras" checked>
-                <label class="form-check-label" for="ne">Ne želim akciju</label>
+                <input class="form-check-input" type="radio" name="extras" id="ne" value="ne" [(ngModel)]="extrasChosen"
+                    checked />
+                <label class="form-check-label" for="ne">Ne želim poklone, cena je 14.99 RSD po komadu</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="extras" id="da" value="da" [(ngModel)]="extras">
-                <label class="form-check-label" for="da">Želim akciju (album, privezak, magnet, poster, poklon iznenadjenje, stoni ram)</label>
+                <input class="form-check-input" type="radio" name="extras" id="da" value="da" [(ngModel)]="extrasChosen" />
+                <label class="form-check-label" for="da">Želim poklone, cena je 16.99 RSD po komadu</label>
             </div>
-          </div>
-        <div class="col-sm-12">
-            <div *ngIf="extras === 'da' then showExtras">
-            </div>
-            <ng-template #showExtras>
-                
-            </ng-template>
         </div>
-        <div class="col-sm-4"></div> <!-- Empty column for spacing -->
-        <div class="col-sm-4">
-            <br>
-            <button class="btn btn-danger w-100" style="width: 100%;" (click)="chooseLocation()">DALJE</button>
+        <div class="col-sm-3">
+            <!-- Possibly empty or with some content -->
         </div>
-        <div class="col-sm-4"></div> <!-- Empty column for spacing -->
 
+        <!-- Middle column for cards -->
+        <div class="col-sm-6">
+            <ng-container *ngIf="extrasChosen === 'da'">
+                <br>
+                <div class="row">
+                    <!-- Loop to create two cards per row inside the col-sm-6 -->
+                    <div class="col-sm-6" *ngFor="let item of extrasNames; let i = index">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">{{ item }}</h5>
+                                <!-- photo preview -->
+                                <div class="row mt-3" *ngIf="extrasBlobs[i] != null">
+                                    <div class="col-md-3">
+                                      <img [src]="extrasBlobs[i]" class="img-fluid img-thumbnail">
+                                    </div>
+                                </div>
+                                <!-- button -->
+                                <button type="button" class="btn btn-danger" id="{{'button-' + i}}" (click)="triggerFileInputClick(i)">
+                                    DODAJ FOTOGRAFIJU
+                                </button>
+                                <!-- hidden photo input -->
+                                <input type="file" name="" id="{{'photo-' + i}}" hidden (change)="onFilesSelected($event, i)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <!-- Right spacing column -->
+        <div class="col-sm-3">
+            <!-- Possibly empty or with some content -->
+        </div>
+
+
+
+        <div class="col-sm-4"></div>
+        <!-- Empty column for spacing -->
+        <div class="col-sm-4">
+            <br />
+            <button class="btn btn-danger w-100" style="width: 100%" (click)="chooseLocation()">
+                DALJE
+            </button>
+        </div>
+        <div class="col-sm-4"></div>
+        <!-- Empty column for spacing -->
     </div>
 </div>

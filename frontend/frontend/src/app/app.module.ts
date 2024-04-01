@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { IndexHeaderComponent } from './components/index-header/index-header.component';
 import { ExtrasComponent } from './components/extras/extras.component';
+import { OrderDetailsComponent } from './components/order-details/order-details.component';
+import { FinalOrderComponent } from './components/final-order/final-order.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +17,8 @@ import { ExtrasComponent } from './components/extras/extras.component';
     IndexComponent,
     IndexHeaderComponent,
     ExtrasComponent,
+    OrderDetailsComponent,
+    FinalOrderComponent,
 
   ],
   imports: [
