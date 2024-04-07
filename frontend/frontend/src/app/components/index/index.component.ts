@@ -22,16 +22,18 @@ export class IndexComponent implements AfterViewInit, OnInit {
   @ViewChild('errorModal') modalError!: ElementRef;
   @ViewChild('photoInput') photoInput!: ElementRef;
   blobs: Blob[] = [];
+  pictureFormats: string[] = [];
   imagePreviews: string[] = [];
   values: number[] = [];
-  photoFormat: String = '';
-  error: String = '';
+  photoFormat: string = '';
+  error: string = '';
   showError: boolean = false;
-  paperBacking: String = 'mat';
+  paperBacking: string = 'mat';
   // for pagination
   currentPage: number = 1;
   itemsPerPage: number = 8;
   totalPages: number = 0;
+  firstTimeUploadedPhotos: boolean = true;
 
   // renderer is used for display modal
   constructor(
@@ -65,6 +67,18 @@ export class IndexComponent implements AfterViewInit, OnInit {
   onNextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+    }
+  }
+
+  // set all formats for all uploaded pictures 
+  setAllFormats(event: Event){
+    const target = event.target as HTMLSelectElement;
+    if (target) {
+      this.photoFormat = target.value;
+    }
+    this.pictureFormats = [];
+    for(let i = 0; i < this.blobs.length; i++){
+      this.pictureFormats.push(this.photoFormat);
     }
   }
 
@@ -111,7 +125,11 @@ export class IndexComponent implements AfterViewInit, OnInit {
     this.imagePreviews.splice(index, 1);
     this.blobs.splice(index, 1);
     this.values.splice(index, 1);
+    this.pictureFormats.splice(index, 1);
     this.setupPagination();
+    if(this.totalPages < this.currentPage){
+      this.currentPage = this.totalPages
+    }
   }
 
   setImageStyles() {
@@ -128,8 +146,6 @@ export class IndexComponent implements AfterViewInit, OnInit {
 
   // adding photos
   onFilesSelected(event: Event) {
-    localStorage.setItem('photos uploaded', 'true');
-
     const input = event.target as HTMLInputElement;
     if (input.files == null) return;
     if (!input.files.length) return;
@@ -141,6 +157,13 @@ export class IndexComponent implements AfterViewInit, OnInit {
       const blob = new Blob([files[i]], { type: files[i].type });
       this.blobs.push(blob);
       this.values.push(1);
+
+      // add photo format if it is selected
+      if(this.photoFormat != ""){
+        this.pictureFormats.push(this.photoFormat);
+      }else{
+        this.pictureFormats.push("izaberi");
+      }
       // Here you can either upload each blob right away or collect them in an array to upload later
 
       // Create a FileReader to read the blob
@@ -151,6 +174,14 @@ export class IndexComponent implements AfterViewInit, OnInit {
       reader.readAsDataURL(blob);
     }
     this.setupPagination();
+    if(this.firstTimeUploadedPhotos == true){
+      this.currentPage = 1;
+      this.firstTimeUploadedPhotos = false;
+    }
+    else{
+      this.currentPage = this.totalPages;
+    }
+    
 
     // Example: Upload the first blob
     // This is just for demonstration, your upload method may differ
@@ -163,16 +194,15 @@ export class IndexComponent implements AfterViewInit, OnInit {
   }
 
   // switches between components
-  photosAdded() {
+  next() {
     // error handling
     this.showError = false;
     this.error = '';
-    let pu = localStorage.getItem('photos uploaded');
-    if (pu == null) {
+    if (this.blobs.length == 0) {
       this.error = 'Niste uneli ni jednu fotografiju.';
       this.showError = true;
     }
-    if (this.photoFormat == '' && this.showError == false) {
+    if (this.pictureFormats.length == 0 && this.showError == false) {
       this.error = 'Morate izabrati format izrade fotografija.';
       this.showError = true;
     }
@@ -186,6 +216,7 @@ export class IndexComponent implements AfterViewInit, OnInit {
       modal.show();
       return;
     }
+    localStorage.setItem('photosUploaded', String(this.blobs.length));
     localStorage.setItem('photos', JSON.stringify(this.blobs));
     this.router.navigate(['extras']);
   }

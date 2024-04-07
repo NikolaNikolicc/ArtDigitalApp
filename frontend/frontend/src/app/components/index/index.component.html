@@ -14,7 +14,7 @@
                             <li>Rok za isporuku fotografija je do 7 radnih dana</li>
                             <li>Ukoliko na drugom koraku izaberete "bez akcije", nemate pravo na poklone</li>
                             <li>Ukoliko na drugom koraku izaberete "želim akciju", na svakih 100 fotografija imate pravo
-                                na 5 poklona (ako izaberete 500 fotografija, otvoriće vam se opcija da izaberete 5 seta
+                                na 6 poklona (ako izaberete 500 fotografija, otvoriće vam se opcija da izaberete 5 seta
                                 poklona)</li>
                         </ul>
                         <hr>
@@ -48,7 +48,10 @@
         <!-- Main content -->
         <div class="col-sm-4"></div> <!-- Empty column for spacing -->
         <div class="col-sm-4">
-            <button class="btn btn-danger w-100" (click)="photoInput.click()">DODAJ SLIKE</button>
+            <button class="btn btn-danger w-100" (click)="photoInput.click()">
+                <span *ngIf="blobs.length == 0">DODAJ SLIKE</span>
+                <span *ngIf="blobs.length != 0">DODAJ JOŠ SLIKA</span>
+            </button>
         </div>
         <div class="col-sm-4"></div> <!-- Empty column for spacing -->
         <br><br><br>
@@ -60,14 +63,24 @@
             <div class="col-md-3" *ngFor="let image of getPaginatedItems(); let i = index">
                 <div class="card">
                     <!-- remove image button -->
-                    <button class="btn btn-danger remove-btn" (click)="removeImage(i)">X</button>
+                    <button class="btn btn-danger remove-btn" (click)="removeImage((currentPage - 1)*itemsPerPage + i)">X</button>
                     <img [src]="image" class="card-img-top" [style]="setImageStyles()">
                     <div class="card-body">
+                        <!-- select option for picture format -->
+                        <div class="mb-3">
+                            <select class="form-select text-center" id="pictureFormatSelect" [(ngModel)]="pictureFormats[i]">
+                                <option value="izaberi" disabled>--IZABERITE FORMAT--</option>
+                                <option value="9x13">9x13</option>
+                                <option value="10x15">10x15</option>
+                                <option value="13x18">13x18</option>
+                                <option value="polaroid">polaroid</option>
+                            </select>
+                        </div>
                         <!-- button for quantity -->
                         <div class="input-group mb-3">
                             <button class="btn btn-outline-secondary" type="button" [id]="'button-minus-' + i"
                                 (click)="decrementValue(i)">-</button>
-                            <input type="text" class="form-control text-center" value="1"
+                                <input type="text" class="form-control text-center" value="1"
                                 aria-describedby="button-addon1" [(ngModel)]="values[i]"
                                 (change)="changeValue(i, $event)">
                             <button class="btn btn-outline-secondary" type="button" [id]="'button-plus-' + i"
@@ -80,7 +93,7 @@
         <div class="col-sm-4" *ngIf="blobs.length > 0"></div>
             <div class="col-sm-4 justify-content-center d-flex" *ngIf="blobs.length > 0">
                 <div>
-                    <nav aria-label="...">
+                    <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center">
                             <li class="page-item pagination-danger-edge" [class.disabled]="currentPage === 1">
                                 <a class="page-link" href="#"
@@ -104,8 +117,8 @@
         <!-- choose photo dimensions -->
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
-            <h3>Izberite dimenziju fotografija:</h3><br>
-            <select class="form-select text-center" name="" id="" [(ngModel)]="photoFormat">
+            <h3>Izberite dimenziju svih fotografija:</h3><br>
+            <select class="form-select text-center" name="" id="" [(ngModel)]="photoFormat" (change)="setAllFormats($event)">
                 <option value="" disabled selected>--IZABERITE ŽELJENI FORMAT--</option>
                 <option value="9x13">9x13</option>
                 <option value="10x15">10x15</option>
@@ -134,7 +147,7 @@
         <div class="col-sm-4"></div> <!-- Empty column for spacing -->
         <div class="col-sm-4">
             <br>
-            <button class="btn btn-danger w-100" (click)="photosAdded()">DALJE</button>
+            <button class="btn btn-danger w-100" (click)="next()">DALJE</button>
         </div>
         <div class="col-sm-4"></div> <!-- Empty column for spacing -->
     </div>

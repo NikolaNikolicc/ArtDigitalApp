@@ -1,5 +1,5 @@
 <div class="container-fluid overflow-auto d-flex justify-content-center">
-    <div class="row text-center">
+    <div class="row text-center" style="width: 100%;">
         <!-- This is where the modal would typically be initialized, separate from the main content flow -->
         <div class="modal" id="errorModal" #errorModal tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
@@ -20,6 +20,31 @@
                 </div>
             </div>
         </div>
+        <!-- This is where the modal would typically be initialized, separate from the main content flow -->
+        <div class="modal" id="termsModal" #termsModal tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Uslovi korišćenja</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body text-start">
+                        Dragi naši kupci, želimo vas obavestiti da prilikom poručivanja fotografija, ukoliko ne izaberete opciju ‘Želim akciju’ u ovom koraku, nećete dobiti poklone, već samo album. Molimo vas da pažljivo pregledate potvrdu porudžbine. Ako nema fotografija za poklone, to znači da opcija akcije nije odabrana. U tom slučaju, šaljemo samo fotografije s albumom, bez poklona. Imajte na umu da ne snosimo odgovornost za nedostatak poklona, jer ste upozoreni na ovoj i prethodnoj stranici. Hvala vam na razumevanju kako bismo zajedno izbegli eventualne nejasnoće.
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="form-check d-inline-block text-start me-auto">
+                            <input type="checkbox" value="" id="termsCheckbox" style="margin-top: 15px;" [(ngModel)]="termsOfUsage">
+                            <label class="form-check-label" for="termsCheckbox">
+                                Pročitao sam i razumem uslove korišćenja
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="termsOfUsage == false" (click)="moveToNextPage()">Razumem</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Main content -->
         <!-- choose paper type -->
         <div class="col-sm-12">
@@ -27,13 +52,28 @@
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="extras" id="ne" value="ne" [(ngModel)]="extrasChosen"
                     checked />
-                <label class="form-check-label" for="ne">Ne želim poklone, cena je 14.99 RSD po komadu</label>
+                <label class="form-check-label" for="ne">Ne želim poklone</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="extras" id="da" value="da" [(ngModel)]="extrasChosen" />
-                <label class="form-check-label" for="da">Želim poklone, cena je 16.99 RSD po komadu</label>
+                <input class="form-check-input" type="radio" name="extras" id="da" value="da"
+                    [(ngModel)]="extrasChosen" [disabled]="numberOfPosibleExtras == 0" />
+                <label class="form-check-label" for="da">Želim poklone</label>
             </div>
         </div>
+        <div class="col-sm-4" *ngIf="extrasChosen === 'da'"></div>
+        <div class="col-sm-4" *ngIf="extrasChosen === 'da'">
+            <br>
+            <p>Imate pravo na sledeći broj akcija: {{numberOfPosibleExtras}}, koliko želite da ih iskoristite:</p>
+            <select name="extras" id="extras" class="form-select" [(ngModel)]="numberOfChosenExtras" (change)="update()">
+                <option class="text-center" value="-1" disabled>--IZABERITE KOLIKO AKCIJA ŽELITE--</option>
+                <option class="text-center" *ngFor="let extra of range(numberOfPosibleExtras);"
+                    [value]="extra+1">
+                    {{ extra+1 }}
+                </option>
+            </select>
+        </div>
+        <div class="col-sm-4" *ngIf="extrasChosen === 'da'"></div>
+
         <div class="col-sm-3">
             <!-- Possibly empty or with some content -->
         </div>
@@ -43,29 +83,36 @@
             <ng-container *ngIf="extrasChosen === 'da'">
                 <br>
                 <div class="row">
-                    <!-- Loop to create two cards per row inside the col-sm-6 -->
-                    <div class="col-sm-6" *ngFor="let item of extrasNames; let i = index">
-                        <div class="card mb-4">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">{{ item }}</h5>
-                                <!-- photo preview -->
-                                <div class="row mt-3" *ngIf="extrasBlobs[i] != null">
-                                    <div class="col-md-3">
-                                      <img [src]="extrasBlobs[i]" class="img-fluid img-thumbnail">
+                    <!-- Outer loop for the number of extras chosen -->
+                    <ng-container *ngFor="let extra of range(numberOfChosenExtras)">
+                        <!-- Inner loop for each item name -->
+                        <div class="col-sm-6" *ngFor="let item of extrasNames; let itemIndex = index">
+                            <div class="mb-4">
+                                <div class="card">
+                                    <br>
+                                    <h5 class="card-title">{{ item }}</h5>
+                                    <!-- photo preview -->
+                                    <img [src]="imagePreviews[extra * extrasNames.length + itemIndex]" class="card-img-top" [style]="setImageStyles()" *ngIf="extrasBlobs[extra * extrasNames.length + itemIndex] != null">
+                                    <div class="card-body text-center">
+                                        <!-- button -->
+                                        <button type="button" class="btn btn-danger" id="{{'button-' + (extra * extrasNames.length + itemIndex)}}"
+                                            (click)="triggerFileInputClick(extra * extrasNames.length + itemIndex)">
+                                            <span *ngIf="extrasBlobs[extra * extrasNames.length + itemIndex] == null">DODAJ FOTOGRAFIJU</span>
+                                            <span *ngIf="extrasBlobs[extra * extrasNames.length + itemIndex] != null">IZMENI FOTOGRAFIJU</span>
+                                            
+                                        </button>
+                                        <!-- hidden photo input -->
+                                        <input type="file" name="" id="{{'photo-' + (extra * extrasNames.length + itemIndex)}}" hidden
+                                            (change)="onFilesSelected($event, extra * extrasNames.length + itemIndex)">
                                     </div>
                                 </div>
-                                <!-- button -->
-                                <button type="button" class="btn btn-danger" id="{{'button-' + i}}" (click)="triggerFileInputClick(i)">
-                                    DODAJ FOTOGRAFIJU
-                                </button>
-                                <!-- hidden photo input -->
-                                <input type="file" name="" id="{{'photo-' + i}}" hidden (change)="onFilesSelected($event, i)">
                             </div>
                         </div>
-                    </div>
+                    </ng-container>
                 </div>
             </ng-container>
         </div>
+        
 
         <!-- Right spacing column -->
         <div class="col-sm-3">
@@ -78,7 +125,7 @@
         <!-- Empty column for spacing -->
         <div class="col-sm-4">
             <br />
-            <button class="btn btn-danger w-100" style="width: 100%" (click)="chooseLocation()">
+            <button class="btn btn-danger w-100" style="width: 100%" (click)="next()">
                 DALJE
             </button>
         </div>
