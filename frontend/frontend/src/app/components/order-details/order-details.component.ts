@@ -98,7 +98,7 @@ export class OrderDetailsComponent {
     }
   }
 
-  finalize(){
+  next(){
     this.error = "";
     this.showError = false;
     this.validations();
