@@ -18,3 +18,11 @@ Uputstvo za preuzimanje:
 				"node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
 ==========================================================================================================================
+2) Pokretanje aplikacije na localhost-u:
+==========================================================================================================================
+Uputstvo za pokretanje:
+	1) otvoriti u VS-Code terminal (command prompt)
+    	2) pozicionirati se u frontend folder (cd frontend)
+        3) ponovo uci u frontend folder (cd frontend)
+        4) izvrsiti komandu za pokretanje aplikacije na localhost-u (ng serve --open)
+==========================================================================================================================
