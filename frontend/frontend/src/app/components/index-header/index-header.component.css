@@ -1,0 +1,66 @@
+/* Sticky navbar */
+nav.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(82, 92, 165, 1);
+    color: white;
+    flex-grow: 1;
+    display: flex; /* Use flex display for the navbar */
+    justify-content: space-between; /* Align items to the start */
+    align-items: center; /* Align items vertically */
+    padding-left: 10px; /* Add padding to the left */
+    padding-right: 10px; /* Add padding to the right */
+}
+
+.collapse{
+    background: rgba(82, 92, 165, 1);
+}
+
+.navbar-toggler {
+    z-index: 1050; /* Higher than the .mx-auto's z-index */
+}
+
+.mx-auto {
+    position: absolute;
+    left: 50%; /* Set the left edge of the element at the center of the navbar */
+    transform: translateX(-50%); /* Move the element to the left by half of its own width */
+    width: 100%; /* Optional: Set a width if you want to use text-align */
+}
+
+/* Ensure the toggler is always visible and styled */
+.navbar-toggler {
+    display: block; /* Always display */
+    border: 1px solid white; /* Visibility on all backgrounds */
+    color: white; /* Color of the toggler icon text or elements */
+}
+
+.navbar-toggler-icon {
+    /* Ensure the icon is always visible and has a high contrast against possible backgrounds */
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: white !important; /* Ensures text links are white */
+}
+
+.navbar-light .navbar-brand {
+    color: white;
+}
+
+ul.navbar-nav.ml-auto {
+    flex: 1; /* Takes up the remaining space to push to the right */
+    display: flex;
+    justify-content: flex-end; /* Aligns the nav items to the end (right) */
+    align-items: center; /* Center align the nav items vertically */
+}
+
+.nav-item {
+    /* Optional: if you want to ensure that the nav items are also spaced out properly */
+    margin-right: 15px; /* Or any other spacing you prefer */
+}
+
+/* Last item does not need a margin to the right */
+.nav-item:last-child {
+    margin-right: 0;
+}

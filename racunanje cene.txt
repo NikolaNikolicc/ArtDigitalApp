@@ -1,0 +1,23 @@
+9x13 do 50 kom 45 din
+Od 50-100 kom 25 din
+Od 100 < 13.99 din
+
+10x15 do 50 kom 50 din
+Od 50-100 kom 25 din
+Od 100> 15.99 kom
+
+13x18 do 50 kom 70 din
+Od 50-100 kom 35 din
+Od 100> 24.99 din 
+
+15x21 kom 80 din
+15x30 kom 150 din
+20x25 kom 250 din
+20x30 kom 350 din
+30x40 kom 850 din
+20x50 kom 1500 din
+50x70 kom 2500 din
+
+polaroid
+Od 1-25 kom 70 din
+25> 25 din kom

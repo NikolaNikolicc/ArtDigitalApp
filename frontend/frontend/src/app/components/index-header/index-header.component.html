@@ -1,13 +1,87 @@
-<nav>
-    <a routerLink="/index-header"></a>
-</nav>
-<br><br><br>
-<div class="container-fluid overflow-auto d-flex justify-content-center">
-    <div class="row text-center">
-        <!-- Main content -->
-        <div class="col-sm-12">
-            <h1>Izrada fotografija online</h1>
+<nav class="navbar fixed-top">
+    <div class="container-fluid">
+        <!-- Logo on the left -->
+        <a class="navbar-brand" href="#">
+            <img src="assets/pictures/Art-digital-logo.png" alt="ArtDigital Logo" width="100">
+        </a>
+        <div class="mx-auto d-none d-md-block">
+            <h2 class="text-white text-center">Izrada fotografija online</h2>
         </div>
-        <br /><br /><br />
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+            aria-controls="offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" #offcanvasNavbar aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Meni</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <button class="btn btn-transparent">
+                            Početna&nbsp;<i class="bi bi-house-door-fill"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-transparent" (click)="startAgain()">
+                            Otkaži
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-transparent" (click)="openPriceModal()">
+                            Cenovnik
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="modal" id="priceModal" #priceModal tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Cenovnik</h3>
+            </div>
+            <div class="modal-body text-start">
+                <ul>
+                    <li>polaroid:</li>
+                    <ul>
+                        <li>manje od 25 komada: 70 RSD</li>
+                        <li>više od 100 komada: 25 RSD</li>
+                    </ul>
+                    <li>9x13:</li>
+                    <ul>
+                        <li>manje od 50 komada: 45 RSD</li>
+                        <li>50-100 komada: 25 RSD</li>
+                        <li>više od 100 komada: 13,99 RSD</li>
+                    </ul>
+                    <li>10x15:</li>
+                    <ul>
+                        <li>manje od 50 komada: 50 RSD</li>
+                        <li>50-100 komada: 25 RSD</li>
+                        <li>više od 100 komada: 16,99 RSD</li>
+                    </ul>
+                    <li>13x18:</li>
+                    <ul>
+                        <li>manje od 50 komada: 70 RSD</li>
+                        <li>50-100 komada: 35 RSD</li>
+                        <li>više od 100 komada: 24,99 RSD</li>
+                    </ul>
+                    <li>15x21: komad 80 RSD</li>
+                    <li>15x30: komad 150 RSD</li>
+                    <li>20x25: komad 250 RSD</li>
+                    <li>20x30: komad 350 RSD</li>
+                    <li>30x40: komad 850 RSD</li>
+                    <li>20x50: komad 1500 RSD</li>
+                    <li>50x70: komad 2500 RSD</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Razumem</button>
+            </div>
+        </div>
     </div>
 </div>

@@ -27,7 +27,7 @@ export class ExtrasComponent implements OnInit{
 
   }
   ngOnInit(): void {
-    let numOfPhotos = localStorage.getItem("photosUploaded");
+    let numOfPhotos = localStorage.getItem("imageBlobsLength");
     if(numOfPhotos != null){
       // convert string to number and get floor value
       this.numberOfPosibleExtras = Math.floor(parseInt(numOfPhotos, 10) / 100);
@@ -98,6 +98,11 @@ export class ExtrasComponent implements OnInit{
       .join('; ');
   }
 
+  back(){
+    localStorage.setItem("backFromExtras", "true");
+    this.router.navigate([""]);
+  }
+
   next(){
     this.showError = false;
     this.error = "";
@@ -118,8 +123,6 @@ export class ExtrasComponent implements OnInit{
       modal.show();
       return;
     }
-    localStorage.setItem("extras", JSON.stringify(this.extrasBlobs));
-
     const modalNative: HTMLElement = this.modalElementRef.nativeElement;
     const modal = new bootstrap.Modal(modalNative, {
       backdrop: 'static', // Prevents closing when clicking outside
@@ -130,7 +133,16 @@ export class ExtrasComponent implements OnInit{
   }
 
   moveToNextPage(){
-    if(this.termsOfUsage)this.router.navigate(["details"]);
+    if(this.termsOfUsage){
+      localStorage.setItem("extras", JSON.stringify(this.extrasBlobs));
+      localStorage.setItem("extrasLength", JSON.stringify(this.extrasBlobs.length));
+      localStorage.setItem("extrasChosen", JSON.stringify(this.extrasChosen));
+      this.router.navigate(["details"]);
+    }
+  }
+
+  toggleTermsOfUsage(){
+    this.termsOfUsage = !this.termsOfUsage;
   }
 
 }
