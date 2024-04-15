@@ -4,6 +4,8 @@ iframe {
   width: calc(100% - 30px); /* This accounts for the 15px margin on each side */
   height: 30vh;
   box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-radius: 0.5rem; /* Adjust this value to get the desired roundness */
 }
 
 
@@ -49,4 +51,38 @@ color: red;
 .form-check-input {
   position: absolute;
   left: -9999px;
+}
+
+/* slide panel */
+.slide-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+.slide-panel .handle {
+  padding: 0.5rem 1rem;
+  background: rgba(236,160,61,255);
+  cursor: pointer;
+}
+.slide-panel-content {
+  padding: 1rem;
+}
+
+.order-details {
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  padding: 1rem;
+  margin-bottom: 15px; /* Spacing below the box */
+  border-radius: 0.5rem; /* Adjust this value to get the desired roundness */
+}
+
+.order-details-header{
+  background-color: rgba(236, 160, 61, 1); /* Corrected alpha value to 1 for full opacity */
+  padding: 1rem; /* Padding to match the design */
+  border-top-left-radius: 0.5rem; /* If the order-details has rounded corners, match these */
+  border-top-right-radius: 0.5rem;
 }

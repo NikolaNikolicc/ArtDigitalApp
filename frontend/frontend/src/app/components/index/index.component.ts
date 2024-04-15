@@ -3,7 +3,6 @@ import {
   Component,
   ElementRef,
   OnInit,
-  Renderer2,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -21,10 +20,10 @@ export class IndexComponent implements AfterViewInit, OnInit {
   @ViewChild('notificationModal') modalElementRef!: ElementRef;
   @ViewChild('errorModal') modalError!: ElementRef;
   @ViewChild('photoInput') photoInput!: ElementRef;
-  blobs: Blob[] = [];
-  pictureFormats: string[] = [];
-  imagePreviews: string[] = [];
-  values: number[] = [];
+  imageBlobs: Blob[] = []; // pictures
+  imageFormats: string[] = []; // dimension for printing
+  imagePreviews: string[] = []; // for src (for user preview)
+  imageQuantities: number[] = []; // quantity for printing
   photoFormat: string = '';
   error: string = '';
   showError: boolean = false;
@@ -35,113 +34,25 @@ export class IndexComponent implements AfterViewInit, OnInit {
   totalPages: number = 0;
   firstTimeUploadedPhotos: boolean = true;
 
-  // renderer is used for display modal
+  // constructor
   constructor(
-    private renderer: Renderer2,
     private uploadService: UploadService,
     private router: Router
-  ) {}
+  ) { }
+
   ngOnInit(): void {
-    localStorage.removeItem('photos uploaded');
-  }
-
-  setupPagination() {
-    this.totalPages = Math.ceil(this.blobs.length / this.itemsPerPage);
-  }
-  
-  getPaginatedItems() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.imagePreviews.slice(startIndex, startIndex + this.itemsPerPage);
-  }
-  
-  goToPage(page: number) {
-    this.currentPage = page;
-  }
-  
-  onPrevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-  
-  onNextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
-
-  // set all formats for all uploaded pictures 
-  setAllFormats(event: Event){
-    const target = event.target as HTMLSelectElement;
-    if (target) {
-      this.photoFormat = target.value;
-    }
-    this.pictureFormats = [];
-    for(let i = 0; i < this.blobs.length; i++){
-      this.pictureFormats.push(this.photoFormat);
-    }
+    
   }
 
   // display modal on page load
   ngAfterViewInit(): void {
+    localStorage.clear();
     const modalNative: HTMLElement = this.modalElementRef.nativeElement;
     const modal = new bootstrap.Modal(modalNative, {
       backdrop: 'static', // Prevents closing when clicking outside
       keyboard: false, // Prevents closing with the escape key
     });
     modal.show();
-  }
-
-  decrementValue(index: number) {
-    this.values[index] = this.values[index] > 1 ? this.values[index] - 1 : 1;
-  }
-
-  incrementValue(index: number) {
-    this.values[index] = this.values[index] + 1;
-  }
-
-  changeValue(index: number, event: Event) {
-    // The target is asserted to be an HTMLInputElement
-    const inputElement = event.target as HTMLInputElement;
-
-    // Now you can safely access the value property
-    const newValue = inputElement.value;
-
-    const numericValue = parseInt(newValue, 10);
-    if (!isNaN(numericValue)) {
-      if(numericValue > 0){
-        this.values[index] = numericValue;
-      }else{
-        this.values[index] = 1;
-      }
-      
-    } else {
-      // Handle the case where the new value is not a number
-      this.values[index] = 1; // Or some other default value
-    }
-  }
-
-  removeImage(index: number) {
-    this.imagePreviews.splice(index, 1);
-    this.blobs.splice(index, 1);
-    this.values.splice(index, 1);
-    this.pictureFormats.splice(index, 1);
-    this.setupPagination();
-    if(this.totalPages < this.currentPage){
-      this.currentPage = this.totalPages
-    }
-  }
-
-  setImageStyles() {
-    const styles = {
-      height: '200px', // Set the desired height
-      width: '100%', // Set width to 100% of the card width
-      'object-fit': 'contain', // Ensures the entire image fits within the dimensions
-      overflow: 'hidden', // Hides parts of the image that overflow the dimensions (just in case)
-    };
-    return Object.entries(styles)
-      .map(([k, v]) => `${k}: ${v}`)
-      .join('; ');
   }
 
   // adding photos
@@ -155,14 +66,14 @@ export class IndexComponent implements AfterViewInit, OnInit {
 
     for (let i = 0; i < files.length; i++) {
       const blob = new Blob([files[i]], { type: files[i].type });
-      this.blobs.push(blob);
-      this.values.push(1);
+      this.imageBlobs.push(blob);
+      this.imageQuantities.push(1);
 
       // add photo format if it is selected
-      if(this.photoFormat != ""){
-        this.pictureFormats.push(this.photoFormat);
-      }else{
-        this.pictureFormats.push("izaberi");
+      if (this.photoFormat != "") {
+        this.imageFormats.push(this.photoFormat);
+      } else {
+        this.imageFormats.push("izaberi");
       }
       // Here you can either upload each blob right away or collect them in an array to upload later
 
@@ -174,18 +85,16 @@ export class IndexComponent implements AfterViewInit, OnInit {
       reader.readAsDataURL(blob);
     }
     this.setupPagination();
-    if(this.firstTimeUploadedPhotos == true){
+    if (this.firstTimeUploadedPhotos == true) {
       this.currentPage = 1;
       this.firstTimeUploadedPhotos = false;
     }
-    else{
+    else {
       this.currentPage = this.totalPages;
     }
-    
 
-    // Example: Upload the first blob
-    // This is just for demonstration, your upload method may differ
-    this.uploadService.uploadImage(this.blobs[0]).subscribe(
+    // preparing blobs for preview
+    this.uploadService.uploadImage(this.imageBlobs[0]).subscribe(
       (response) => {
         console.log('Upload successful', response);
       },
@@ -193,16 +102,113 @@ export class IndexComponent implements AfterViewInit, OnInit {
     );
   }
 
-  // switches between components
+  // for image  removing
+  removeImage(index: number) {
+    this.imagePreviews.splice(index, 1);
+    this.imageBlobs.splice(index, 1);
+    this.imageQuantities.splice(index, 1);
+    this.imageFormats.splice(index, 1);
+    this.setupPagination();
+    if (this.totalPages < this.currentPage) {
+      this.currentPage = this.totalPages
+    }
+  }
+
+  setupPagination() {
+    this.totalPages = Math.ceil(this.imageBlobs.length / this.itemsPerPage);
+  }
+
+  // get items that are located on certain page
+  getPaginatedItems() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.imagePreviews.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  // moving through pagination
+  goToPage(page: number) {
+    this.currentPage = page;
+  }
+
+  // button prethodna
+  onPrevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  // button sledeca
+  onNextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  // set all formats for all uploaded pictures 
+  setAllFormats(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    if (target) {
+      this.photoFormat = target.value;
+    }
+    this.imageFormats = [];
+    for (let i = 0; i < this.imageBlobs.length; i++) {
+      this.imageFormats.push(this.photoFormat);
+    }
+  }
+
+  // decrement quantity of certain picture
+  decrementValue(index: number) {
+    this.imageQuantities[index] = this.imageQuantities[index] > 1 ? this.imageQuantities[index] - 1 : 1;
+  }
+
+  // increment quantity of certain picture
+  incrementValue(index: number) {
+    this.imageQuantities[index] = this.imageQuantities[index] + 1;
+  }
+
+  // set quantity manually
+  changeValue(index: number, event: Event) {
+    // The target is asserted to be an HTMLInputElement
+    const inputElement = event.target as HTMLInputElement;
+    // Now you can safely access the value property
+    const newValue = inputElement.value;
+    const numericValue = parseInt(newValue, 10);
+
+    if (!isNaN(numericValue)) {
+      if (numericValue > 0) {
+        this.imageQuantities[index] = numericValue;
+      } else {
+        this.imageQuantities[index] = 1;
+      }
+
+    } else {
+      // Handle the case where the new value is not a number
+      this.imageQuantities[index] = 1; // Or some other default value
+    }
+  }
+
+  // img preview
+  setImageStyles() {
+    const styles = {
+      height: '200px', // Set the desired height
+      width: '100%', // Set width to 100% of the card width
+      'object-fit': 'contain', // Ensures the entire image fits within the dimensions
+      overflow: 'hidden', // Hides parts of the image that overflow the dimensions (just in case)
+    };
+    return Object.entries(styles)
+      .map(([k, v]) => `${k}: ${v}`)
+      .join('; ');
+  }
+
+  // switches between components and preparing local storage
   next() {
     // error handling
     this.showError = false;
     this.error = '';
-    if (this.blobs.length == 0) {
+    if (this.imageBlobs.length == 0) {
       this.error = 'Niste uneli ni jednu fotografiju.';
       this.showError = true;
     }
-    if (this.pictureFormats.length == 0 && this.showError == false) {
+    if (this.imageFormats.length == 0 && this.showError == false) {
       this.error = 'Morate izabrati format izrade fotografija.';
       this.showError = true;
     }
@@ -216,8 +222,11 @@ export class IndexComponent implements AfterViewInit, OnInit {
       modal.show();
       return;
     }
-    localStorage.setItem('photosUploaded', String(this.blobs.length));
-    localStorage.setItem('photos', JSON.stringify(this.blobs));
+    localStorage.setItem('imageBlobsLength', String(this.imageBlobs.length));
+    localStorage.setItem('imageBlobs', JSON.stringify(this.imageBlobs));
+    localStorage.setItem('imageFormats', JSON.stringify(this.imageFormats));
+    localStorage.setItem('imageQuantities', JSON.stringify(this.imageQuantities));
+    localStorage.setItem('paperBacking', this.paperBacking);
     this.router.navigate(['extras']);
   }
 }
