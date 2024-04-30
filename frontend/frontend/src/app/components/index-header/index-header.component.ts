@@ -38,10 +38,11 @@ export class IndexHeaderComponent{
     // Now show the modal for prices
     const modalNative: HTMLElement = this.priceModalRef.nativeElement;
     const modal = new bootstrap.Modal(modalNative, {
-      backdrop: 'static',
-      keyboard: false,
+      // backdrop: 'static',
+      // keyboard: false,
     });
     modal.show();
   }
+
   
 }

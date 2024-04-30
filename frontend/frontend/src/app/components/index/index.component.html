@@ -58,91 +58,14 @@
         <br><br><br>
         <!-- hidden photo input -->
         <input type="file" #photoInput hidden multiple (change)="onFilesSelected($event)">
-        <!-- uploaded photos preview -->
-        <div class="row mt-3"  *ngIf="imageBlobs.length > 0">
-            <h3>Izabrali ste {{imageBlobs.length}} fotografije/a.</h3>
-            <div class="col-md-3" *ngFor="let image of getPaginatedItems(); let i = index">
-                <div class="card">
-                    <!-- remove image button -->
-                    <button class="btn btn-danger remove-btn" (click)="removeImage((currentPage - 1)*itemsPerPage + i)">X</button>
-                    <img [src]="image" class="card-img-top" [style]="setImageStyles()">
-                    <div class="card-body">
-                        <!-- select option for picture format -->
-                        <div class="mb-3">
-                            <select class="form-select text-center" id="pictureFormatSelect" [(ngModel)]="imageFormats[(currentPage - 1)*itemsPerPage + i]">
-                                <option value="izaberi" disabled>--IZABERITE FORMAT--</option>
-                                <option value="9x13">9x13</option>
-                                <option value="10x15">10x15</option>
-                                <option value="13x18">13x18</option>
-                                <option value="15x21">15x21</option>
-                                <option value="15x30">15x30</option>
-                                <option value="20x25">20x25</option>
-                                <option value="20x30">20x30</option>
-                                <option value="30x40">30x40</option>
-                                <option value="20x50">20x50</option>
-                                <option value="50x70">50x70</option>
-                                <option value="polaroid">polaroid</option>
-                            </select>
-                        </div>
-                        <!-- button for quantity -->
-                        <div class="input-group mb-3">
-                            <button class="btn btn-outline-secondary" type="button" [id]="'button-minus-' + i"
-                                (click)="decrementValue(i)">-</button>
-                                <input type="text" class="form-control text-center" value="1"
-                                aria-describedby="button-addon1" [(ngModel)]="imageQuantities[i]"
-                                (change)="changeValue(i, $event)">
-                            <button class="btn btn-outline-secondary" type="button" [id]="'button-plus-' + i"
-                                (click)="incrementValue(i)">+</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4" *ngIf="imageBlobs.length > 0"></div>
-            <div class="col-sm-4 justify-content-center d-flex" *ngIf="imageBlobs.length > 0">
-                <div>
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <!-- prev page -->
-                            <li class="page-item pagination-danger-edge" [class.disabled]="currentPage === 1">
-                                <a class="page-link" href="#" (click)="onPrevPage(); $event.preventDefault();">&laquo;</a>
-                            </li>
-                            <!-- first page -->
-                            <li *ngIf="totalPages > 0" class="page-item" [class.active]="currentPage === 1">
-                                <a class="page-link" href="#" (click)="goToPage(1); $event.preventDefault();">1</a>
-                            </li>
 
-                            <!-- current page - 1 -->
-                            <li *ngIf="currentPage > 2 && currentPage <= totalPages" class="page-item" [class.active]="currentPage === currentPage - 1">
-                                <a class="page-link" href="#" (click)="goToPage(currentPage - 1); $event.preventDefault();">{{ currentPage - 1 }}</a>
-                            </li>
-                            <!-- current page -->
-                            <li *ngIf="currentPage > 1 && currentPage < totalPages" class="page-item" [class.active]="true">
-                                <a class="page-link" href="#" (click)="goToPage(currentPage); $event.preventDefault();">{{ currentPage }}</a>
-                            </li>
-                            <!-- current page + 1 -->
-                            <li *ngIf="currentPage > 0 && currentPage < totalPages - 1" class="page-item" [class.active]="currentPage === currentPage + 1">
-                                <a class="page-link" href="#" (click)="goToPage(currentPage + 1); $event.preventDefault();">{{ currentPage + 1 }}</a>
-                            </li>
-                            <!-- last page -->
-                            <li *ngIf="totalPages - 2 > 0" class="page-item" [class.active]="currentPage === totalPages">
-                                <a class="page-link" href="#" (click)="goToPage(totalPages); $event.preventDefault();">{{ totalPages }}</a>
-                            </li>
-                            <!-- next page -->
-                            <li class="page-item pagination-danger-edge" [class.disabled]="currentPage === totalPages">
-                                <a class="page-link" href="#" (click)="onNextPage(); $event.preventDefault();">&raquo;</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            <div class="col-sm-4" *ngIf="imageBlobs.length > 0"></div>
-        
+
         <!-- choose photo dimensions -->
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
             <h3>Podesite dimenziju svih fotografija:</h3><br>
-            <select class="form-select text-center" name="" id="" [(ngModel)]="photoFormat" (change)="setAllFormats($event)">
+            <select class="form-select text-center" name="" id="" [(ngModel)]="photoFormat"
+                (change)="setAllFormats($event)">
                 <option value="" disabled selected>--IZABERITE ŽELJENI FORMAT--</option>
                 <option value="9x13">9x13</option>
                 <option value="10x15">10x15</option>
@@ -172,8 +95,112 @@
         <div class="col-sm-4">
             <br>
             <button class="btn btn-danger w-100" (click)="next()">DALJE</button>
-        </div>
+        </div>        
         <div class="col-sm-4"></div> <!-- Empty column for spacing -->
+
+        <!-- progress bar -->
+        <div class="col-sm-4"></div><!-- Empty column for spacing -->
+        <div class="col-sm-4">
+            <div  *ngIf="fileStatus.status == 'progress'">
+                <br>
+                <div class="progress">
+                    <div [style.width.%]="fileStatus.percent" class="progress-bar progress-bar-animated custom-progress-bar" role="progressbar" aria-valuenow="">
+                        {{fileStatus.requestType}}: {{fileStatus.percent}}%
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4"></div><!-- Empty column for spacing -->
+
+        <!-- pagination -->
+        <div class="col-sm-4" *ngIf="imageBlobs.length > 0"></div>
+        <div class="col-sm-4 justify-content-center d-flex" *ngIf="imageBlobs.length > 0">
+            <nav aria-label="Page navigation">
+                <br>
+                <ul class="pagination justify-content-center">
+                    <!-- prev page -->
+                    <li class="page-item pagination-danger-edge" [class.disabled]="currentPage === 1">
+                        <a class="page-link" href="#" (click)="onPrevPage(); $event.preventDefault();">&laquo;</a>
+                    </li>
+                    <!-- first page -->
+                    <li *ngIf="totalPages > 0" class="page-item" [class.active]="currentPage === 1">
+                        <a class="page-link" href="#" (click)="goToPage(1); $event.preventDefault();">1</a>
+                    </li>
+
+                    <!-- current page - 1 -->
+                    <li *ngIf="currentPage > 2 && currentPage <= totalPages" class="page-item"
+                        [class.active]="currentPage === currentPage - 1">
+                        <a class="page-link" href="#"
+                            (click)="goToPage(currentPage - 1); $event.preventDefault();">{{ currentPage - 1 }}</a>
+                    </li>
+                    <!-- current page -->
+                    <li *ngIf="currentPage > 1 && currentPage < totalPages" class="page-item" [class.active]="true">
+                        <a class="page-link" href="#" (click)="goToPage(currentPage); $event.preventDefault();">{{
+                            currentPage }}</a>
+                    </li>
+                    <!-- current page + 1 -->
+                    <li *ngIf="currentPage > 0 && currentPage < totalPages - 1" class="page-item"
+                        [class.active]="currentPage === currentPage + 1">
+                        <a class="page-link" href="#"
+                            (click)="goToPage(currentPage + 1); $event.preventDefault();">{{ currentPage + 1 }}</a>
+                    </li>
+                    <!-- last page -->
+                    <li *ngIf="totalPages - 2 > 0" class="page-item" [class.active]="currentPage === totalPages">
+                        <a class="page-link" href="#" (click)="goToPage(totalPages); $event.preventDefault();">{{
+                            totalPages }}</a>
+                    </li>
+                    <!-- next page -->
+                    <li class="page-item pagination-danger-edge" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link" href="#" (click)="onNextPage(); $event.preventDefault();">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-sm-4" *ngIf="imageBlobs.length > 0"></div>
+
+                <!-- uploaded photos preview -->
+                <div class="row mt-3" *ngIf="imageBlobs.length > 0">
+                    <h3>Izabrali ste {{imageBlobs.length}} fotografije/a.</h3>
+                    <div class="col-md-3" *ngFor="let image of getPaginatedItems(); let i = index">
+                        <div class="card">
+                            <!-- remove image button -->
+                            <button class="btn btn-danger remove-btn"
+                                (click)="removeImage((currentPage - 1)*itemsPerPage + i)">X</button>
+                            <img [src]="image" class="card-img-top" [style]="setImageStyles()">
+                            <div class="card-body">
+                                <!-- select option for picture format -->
+                                <div class="mb-3">
+                                    <select class="form-select text-center" id="pictureFormatSelect"
+                                        [(ngModel)]="imageFormats[(currentPage - 1)*itemsPerPage + i]">
+                                        <option value="izaberi" disabled>--IZABERITE FORMAT--</option>
+                                        <option value="9x13">9x13</option>
+                                        <option value="10x15">10x15</option>
+                                        <option value="13x18">13x18</option>
+                                        <option value="15x21">15x21</option>
+                                        <option value="15x30">15x30</option>
+                                        <option value="20x25">20x25</option>
+                                        <option value="20x30">20x30</option>
+                                        <option value="30x40">30x40</option>
+                                        <option value="20x50">20x50</option>
+                                        <option value="50x70">50x70</option>
+                                        <option value="polaroid">polaroid</option>
+                                    </select>
+                                </div>
+                                <!-- button for quantity -->
+                                <div class="input-group mb-3">
+                                    <button class="btn btn-outline-secondary" type="button" [id]="'button-minus-' + i"
+                                        (click)="decrementValue(i)">-</button>
+                                    <input type="text" class="form-control text-center" value="1"
+                                        aria-describedby="button-addon1" [(ngModel)]="imageQuantities[i]"
+                                        (change)="changeValue(i, $event)">
+                                    <button class="btn btn-outline-secondary" type="button" [id]="'button-plus-' + i"
+                                        (click)="incrementValue(i)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
     </div>
 
 </div>
