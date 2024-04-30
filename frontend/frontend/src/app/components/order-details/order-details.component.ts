@@ -34,6 +34,7 @@ export class OrderDetailsComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     let nop = localStorage.getItem("imageBlobsLength");
     let noe = localStorage.getItem("extrasLength");
     let dim = localStorage.getItem("imageFormats");

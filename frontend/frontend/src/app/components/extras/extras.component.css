@@ -26,3 +26,10 @@
     left: -9999px;
   }
   
+  .custom-progress-bar{
+    background-color: rgba(236, 160, 61, 1);
+  }
+  
+  .progress{
+    height: 30px;
+  }
